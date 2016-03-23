@@ -1,0 +1,15 @@
+# If you change this file you must make the same change to
+# spec/fixtures/hiera.yaml.
+---
+:hierarchy:
+  - "role/%{::env}/%{::role}"
+  - "role/%{::role}"
+  - "env/%{::env}"
+  - common
+
+:backends:
+  - yaml
+
+:yaml:
+  :datadir: /etc/hiera/data
+...
