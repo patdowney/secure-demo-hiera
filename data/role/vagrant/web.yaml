@@ -1,0 +1,5 @@
+static_website_example::vhost: 'web.vagrant'
+
+reverse_proxy_example::vhost: 'api.vagrant'
+reverse_proxy_example::members:
+  - 172.10.10.12:8080
