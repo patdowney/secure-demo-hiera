@@ -1,0 +1,13 @@
+cfssl::genkeys:
+  rootca:
+    initca: true
+    csr:
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Acme Certificate Authority
+          ST: London

@@ -1,10 +1,13 @@
 #!/bin/bash
 
 MAINTAINER="pat.downey@gmail.com"
-URL="https://github.com/patdowney/demo-hiera"
-PACKAGE_NAME="demo-hiera"
+URL="https://github.com/patdowney/secure-demo-hiera"
+PACKAGE_NAME="secure-demo-hiera"
 
 bundle install --path vendor/bundle --binstubs .bundle/bin
+
+
+find ./data -name '*.yaml' -exec "ruby -e  \"require 'yaml'; YAML.parse_file(\\\"{}\\\");\"" \;
 
 VERSION=${TRAVIS_BUILD_NUMBER:-0}
 

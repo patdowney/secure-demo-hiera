@@ -1,4 +1,0 @@
-static_website_example::vhost: 'standalone.example.com'
-reverse_proxy_example::vhost: 'standalone-api.example.com'
-reverse_proxy_example::members:
-  - 127.0.0.1:8080

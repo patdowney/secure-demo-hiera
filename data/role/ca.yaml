@@ -1,0 +1,116 @@
+cfssl::multirootca::multirootca_loglevel: 0
+cfssl::multirootca::tls_cert: /etc/cfssl/multiroot/multiroot.pem
+cfssl::multirootca::tls_key: /etc/cfssl/multiroot/multiroot-key.pem
+cfssl::multirootca::config:
+  auth_keys:
+    primary:
+      type: standard
+      key: "%{::cfssl_auth_key_primary}"
+  signing:
+    default:
+      expiry: 8760h
+    profiles:
+      'tls-server':
+        usages:
+          - signing
+          - key encipherment
+          - server auth
+        expiry: 8760h
+        auth_key: primary 
+      'tls-client':
+        usages:
+          - signing
+          - key encipherment
+          - client auth
+        expiry: 8760h
+        auth_key: primary 
+      'tls-client-and-server':
+        usages:
+          - signing
+          - key encipherment
+          - client auth
+          - server auth
+        expiry: 8760h
+        auth_key: primary 
+
+cfssl::config:
+  signing:
+    default:
+      expiry: 8760h
+    profiles:
+      intermediate:
+        usages:
+          - signing
+          - key encipherment
+          - cert sign
+          - crl sign
+        expiry: 8760h
+        is_ca: true
+      'tls-server':
+        usages:
+          - signing
+          - key encipherment
+          - server auth
+        expiry: 8760h
+
+cfssl::gencerts:
+  catlsca:
+    generate_bundle: true
+    ca: rootca 
+    profile: intermediate 
+    csr:
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Certificate Authority TLS CA
+          ST: London
+  multiroot:
+    ca: catlsca
+    profile: tls-server
+    csr:
+      cn: 172.10.10.10
+      hosts:
+        - 172.10.10.10
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: MultirootCA Server
+          ST: London
+  vaultca:
+    configure_multirootca: true
+    generate_bundle: true
+    ca: rootca 
+    profile: intermediate
+    csr:
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Vault CA
+          ST: London
+  consulca:
+    configure_multirootca: true
+    generate_bundle: true
+    ca: rootca 
+    profile: intermediate
+    csr:
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Consul CA
+          ST: London

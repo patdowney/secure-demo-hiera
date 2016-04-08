@@ -1,0 +1,145 @@
+cfssl::remote::configs:
+  consulca:
+    owner: consul
+    config:
+      auth_keys:
+        consulca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "https://172.10.10.10:8888"
+      signing:
+        default:
+          auth_remote:
+            auth_key: consulca
+            remote: caserver
+  vaultconsulca:
+    owner: vault
+    config:
+      auth_keys:
+        consulca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "https://172.10.10.10:8888"
+      signing:
+        default:
+          auth_remote:
+            auth_key: consulca
+            remote: caserver
+  vaultca:
+    owner: vault
+    config:
+      auth_keys:
+        vaultca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "https://172.10.10.10:8888"
+      signing:
+        default:
+          auth_remote:
+            auth_key: vaultca
+            remote: caserver
+
+cfssl::remote::gencerts:
+  consul:
+    owner: consul
+    config: consulca
+    label: consulca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "127.0.0.1"
+        - "%{::ipaddress_eth0}"
+        - "%{::ipaddress_eth1}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Consul Agent
+          ST: London
+  vaultconsul:
+    owner: vault
+    config: vaultconsulca
+    label: consulca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "127.0.0.1"
+        - "%{::ipaddress_eth0}"
+        - "%{::ipaddress_eth1}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Vault Consul Certificate
+          ST: London
+  vault:
+    owner: vault
+    config: vaultca
+    label: vaultca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "127.0.0.1"
+        - "%{::ipaddress_eth0}"
+        - "%{::ipaddress_eth1}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Vault Server
+          ST: London
+
+ca_cert::ca_certs:
+  'catlsca-bundle':
+    source: http://172.10.10.10/catlsca-bundle.crt
+  'consulca-bundle':
+    source: http://172.10.10.10/consulca-bundle.crt
+  'vaultca-bundle':
+    source: http://172.10.10.10/vaultca-bundle.crt
+
+config::consul::agent::datacenter: vagrant
+config::consul::agent::retry_join:
+  - 172.10.10.16
+config::consul::agent::encrypt_key: "%{::consul_encrypt_key}"
+config::consul::agent::cert_file: /etc/cfssl/consul/consul.pem
+config::consul::agent::key_file: /etc/cfssl/consul/consul-key.pem
+config::consul::agent::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::agent::https_port: 8501
+config::consul::agent::http_port: -1
+config::consul::agent::verify_outgoing: true
+config::consul::agent::enable_ui: true
+config::consul::agent::client_addr: 127.0.0.1
+config::consul::agent::advertise_addr: "%{::ipaddress_eth1}"
+config::consul::agent::acl_token: "%{::consul_acl_token_vault}"
+config::consul::agent::acl_datacenter: vagrant
+
+config::vault::server::listener_addr: "%{::ipaddress_eth1}:8200"
+config::vault::server::tls_cert_file: /etc/cfssl/vault/vault.pem
+config::vault::server::tls_key_file: /etc/cfssl/vault/vault-key.pem
+config::vault::server::consul_ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::vault::server::consul_cert_file: /etc/cfssl/vaultconsul/vaultconsul.pem
+config::vault::server::consul_key_file: /etc/cfssl/vaultconsul/vaultconsul-key.pem
+config::vault::server::consul_token: "%{::consul_acl_token_vault}"
+
+consul::services:
+  vault:
+    address: "%{::ipaddress_eth1}"
+    port: 8200
+    checks:
+      - script: "curl -sw '%{literal('%')}{http_code}' --user-agent consul/healthcheck --insecure https://%{::ipaddress_eth1}:8200/v1/sys/health | egrep -q '200|429'"
+        interval: 10s

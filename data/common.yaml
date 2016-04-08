@@ -1,4 +1,0 @@
-nginx::config::vhost_purge: true
-nginx::config::confd_purge: true
-
-nodejs::version: 'latest'
