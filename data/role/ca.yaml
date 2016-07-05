@@ -65,7 +65,7 @@ cfssl::gencerts:
       names:
         - C: GB
           L: London
-          O: Acme Secure Delivery Company
+          O: Secure Delivery Company
           OU: Certificate Authority TLS CA
           ST: London
   multiroot:
@@ -96,7 +96,7 @@ cfssl::gencerts:
       names:
         - C: GB
           L: London
-          O: Acme Secure Delivery Company
+          O: Secure Delivery Company
           OU: Vault CA
           ST: London
   consulca:
@@ -111,6 +111,6 @@ cfssl::gencerts:
       names:
         - C: GB
           L: London
-          O: Acme Secure Delivery Company
+          O: Secure Delivery Company
           OU: Consul CA
           ST: London

@@ -18,7 +18,7 @@ bundle exec  fpm -t deb -s dir \
   --package ".output/${PACKAGE_NAME}_${VERSION}_all.deb" \
   --name "${PACKAGE_NAME}" \
   --version "${VERSION}" \
-  --depends 'puppet-agent' \
+  --depends 'puppet' \
   --architecture all \
   --maintainer ${MAINTAINER} \
   --url ${URL} \

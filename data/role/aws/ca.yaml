@@ -1,0 +1,13 @@
+cfssl::genkeys:
+  rootca:
+    initca: true
+    csr:
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Secure Delivery Company
+          OU: Secure.CD Internal Root Certificate Authority
+          ST: London

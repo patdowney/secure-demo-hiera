@@ -2,7 +2,7 @@
 # spec/fixtures/hiera.yaml.
 ---
 :hierarchy:
-  - "role/%{::env}/%{::role}"
+  - "role/%{::provider}/%{::role}"
   - "role/%{::role}"
   - "env/%{::env}"
   - "provider/%{::provider}"
