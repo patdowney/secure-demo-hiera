@@ -1,3 +1,14 @@
+ca_url: "https://172.10.10.10:8888"
+cert_base_url: "http://172.10.10.10"
+
+ 
+config::consul::server::advertise_addr: "%{::ipaddress_enp0s8}"
+config::consul::server::listen_addr: "%{::ipaddress_eth1}"
+
+config::consul::server::start_join:
+  - 172.10.10.16
+
+# generic
 cfssl::remote::configs:
   consulca:
     owner: consul
@@ -7,7 +18,7 @@ cfssl::remote::configs:
           type: standard
           key: "%{::cfssl_auth_key_primary}"
       remotes:
-        caserver: "https://172.10.10.10:8888"
+        caserver: "%{hiera('ca_url')}"
       signing:
         default:
           auth_remote:
@@ -23,9 +34,10 @@ cfssl::remote::gencerts:
     csr:
       cn: "%{::hostname}"
       hosts:
+        - "%{::hostname}"
         - "127.0.0.1"
-        - "%{::ipaddress_eth0}"
-        - "%{::ipaddress_eth1}"
+        - "%{::ipaddress_enp0s3}"
+        - "%{::ipaddress_enp0s8}"
       key:
         algo: rsa
         size: 4096
@@ -36,25 +48,20 @@ cfssl::remote::gencerts:
           OU: Consul Server
           ST: London
 
-
 ca_cert::ca_certs:
   'catlsca-bundle':
-    source: http://172.10.10.10/catlsca-bundle.crt
+    source: "%{hiera('cert_base_url')}/catlsca-bundle.crt"
   'consulca-bundle':
-    source: http://172.10.10.10/consulca-bundle.crt
+    source: "%{hiera('cert_base_url')}/consulca-bundle.crt"
   'vaultca-bundle':
-    source: http://172.10.10.10/vaultca-bundle.crt
+    source: "%{hiera('cert_base_url')}/vaultca-bundle.crt"
 
-config::consul::server::datacenter: vagrant
-config::consul::server::acl_datacenter: vagrant
+config::consul::server::datacenter: "%{::role}"
+config::consul::server::acl_datacenter: "%{::role}"
 config::consul::server::acl_default_policy: deny
 config::consul::server::acl_master_token: "%{::consul_acl_master_token}"
-config::consul::server::start_join:
-  - 172.10.10.16
 config::consul::server::bootstrap_expect: 3
 config::consul::server::encrypt_key: "%{::consul_encrypt_key}"
-config::consul::server::advertise_addr: "%{::ipaddress_eth1}"
-config::consul::server::listen_addr: "%{::ipaddress_eth1}"
 config::consul::server::cert_file: /etc/cfssl/consul/consul.pem
 config::consul::server::key_file: /etc/cfssl/consul/consul-key.pem
 config::consul::server::ca_file: /etc/ssl/certs/consulca-bundle.pem

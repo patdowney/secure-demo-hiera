@@ -23,9 +23,10 @@ cfssl::remote::gencerts:
     csr:
       cn: "%{::hostname}"
       hosts:
+        - "%{::hostname}"
         - "127.0.0.1"
-        - "%{::ipaddress_eth0}"
-        - "%{::ipaddress_eth1}"
+        - "%{::ipaddress_enp0s3}"
+        - "%{::ipaddress_enp0s8}"
       key:
         algo: rsa
         size: 4096
