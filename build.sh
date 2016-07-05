@@ -7,7 +7,7 @@ PACKAGE_NAME="secure-demo-hiera"
 bundle install --path vendor/bundle --binstubs .bundle/bin
 
 
-find ./data -name '*.yaml' -exec "ruby -e  \"require 'yaml'; YAML.parse_file(\\\"{}\\\");\"" \;
+find ./data -name '*.yaml' -exec ruby -e  "require 'yaml'; YAML.parse_file(\"{}\");" \;
 
 VERSION=${TRAVIS_BUILD_NUMBER:-0}
 
