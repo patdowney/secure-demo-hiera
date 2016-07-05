@@ -5,6 +5,7 @@
   - "role/%{::env}/%{::role}"
   - "role/%{::role}"
   - "env/%{::env}"
+  - "provider/%{::provider}"
   - common
 
 :backends:
