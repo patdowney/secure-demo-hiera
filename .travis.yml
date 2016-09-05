@@ -1,0 +1,22 @@
+sudo: required
+dist: trusty
+addons:
+  apt:
+    packages:
+    - wget
+language: ruby
+rvm:
+- 2.1.5
+env:
+- PACKAGE_TARGET=deb
+install: bundle install
+script:
+- "./build.sh"
+deploy:
+  - provider: bintray
+    file: ".bintray/deb.json"
+    user: patdowney
+    key:
+      secure: XHPJ5oy87ZJODk+sl2nczNyuOwmpdYAFFQhSc3FhF5BaMIH3GJC6clYqptYbfCn5qewYtxKvbVZq+ow53WwYDSI8+G3PiWJ8JmAvBh1SAA4ctMIts3WSzemKdXe+Re7hPMAxzWnYNbGH1mdBvnKF8v3XN0P/MIwNf+I7DR5WLd7iBNfq6w0CgleTPQwNG9l0Y+btr9bzF8uxKhiUlcOYue+QbvxP1upCYBAN0U9aQhr1GciJ9uy9uD/PCVEbQg4yKIjgvh5anIQgHzKAieDn0wzyXL6NpuokgsqVevN+rn1pngkjjRWwDTve+ZP3QxYrTOjimcU/Y9opWrSHpx4pMVX8SO+lUArHAW5C1axA+9VtnKPvGv7ZVefidCiXUK0R5P6XFND8oQzschIcPnu8los8cCWCfZa3OE6S5w2JGHwqHq1bXNugt2KaFzePs4og1W43lS7657T6KH0DeodAecL6bxZb0uME3DPyEiko/TMpHqWCXDuzzh6puaD2x7Ekf8fAd/bKKnbAGD1svQjIsav+HQmQYbHLqEmWJu4w5cMYlwka5zpZ0Rh83cMe9XuVA0oR5sJixoe35k+JUcBKeExKTRCQQIeitRAtTlV+tS7ziaRKfLGJUy2QDK0oEyG74hzNii6Q5WKv6gwLrc8Ig6fjt88zrZJi3146f+mRpE0=
+    on:
+      condition: "$PACKAGE_TARGET = deb"
