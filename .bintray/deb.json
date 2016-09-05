@@ -1,0 +1,30 @@
+{
+  "package": {
+    "name": "secure-demo-hiera",
+    "repo": "secure-demo-deb",
+    "subject": "patdowney",
+    "desc": "Debian packages of Secure Demo config",
+    "website_url": "https://github.com/patdowney/secure-demo-hiera",
+    "issue_tracker_url": "https://github.com/patdowney/secure-demo-hiera/issues",
+    "vcs_url": "https://github.com/patdowney/secure-demo-hiera.git",
+    "licenses": ["BSD 2-Clause"],
+    "github_repo": "patdowney/secure-demo-hiera",
+    "public_download_numbers": false,
+    "public_stats": false
+  },
+  "version": {
+    "name": "1.1"
+  },
+  "files":
+  [
+    {
+      "includePattern": "./(secure-demo-hiera_*_all.deb)",
+      "uploadPattern": "$1",
+      "matrixParams": {
+        "deb_distribution": "precise,trusty,vivid",
+        "deb_component": "main",
+        "deb_architecture": "all"}
+    }
+  ],
+  "publish": true
+}
