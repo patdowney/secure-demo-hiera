@@ -13,12 +13,12 @@
     "public_stats": false
   },
   "version": {
-    "name": "1.1"
+    "name": "0.1"
   },
   "files":
   [
     {
-      "includePattern": "./(secure-demo-hiera_*_all.deb)",
+      "includePattern": "./(secure-demo-hiera_0.1.*_all.deb)",
       "uploadPattern": "$1",
       "matrixParams": {
         "deb_distribution": "precise,trusty,vivid",

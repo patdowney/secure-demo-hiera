@@ -15,7 +15,7 @@ mkdir -p .output
 rm -rf .output/*
 
 bundle exec  fpm -t deb -s dir \
-  --package ".output/${PACKAGE_NAME}_${VERSION}_all.deb" \
+  --package ".output/${PACKAGE_NAME}_0.1.${VERSION}_all.deb" \
   --name "${PACKAGE_NAME}" \
   --version "${VERSION}" \
   --depends 'puppet' \
