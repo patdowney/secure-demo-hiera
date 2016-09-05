@@ -1,3 +1,5 @@
+cfssl_hostname: ca.us-east-1a.i.secure.cd
+
 cfssl::genkeys:
   rootca:
     initca: true

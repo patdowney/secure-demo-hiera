@@ -1,3 +1,5 @@
+cfssl_hostname: 172.10.10.10
+
 cfssl::genkeys:
   rootca:
     initca: true

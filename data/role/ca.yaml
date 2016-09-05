@@ -1,3 +1,4 @@
+
 cfssl::multirootca::multirootca_loglevel: 0
 cfssl::multirootca::tls_cert: /etc/cfssl/multiroot/multiroot.pem
 cfssl::multirootca::tls_key: /etc/cfssl/multiroot/multiroot-key.pem
@@ -72,9 +73,11 @@ cfssl::gencerts:
     ca: catlsca
     profile: tls-server
     csr:
-      cn: 172.10.10.10
+      cn: "%{hiera('cfssl_hostname')}"
       hosts:
-        - 172.10.10.10
+        - "%{::fqdn}"
+        - "%{::hostname}"
+        - "%{hiera('cfssl_hostname')}"
       key:
         algo: rsa
         size: 4096

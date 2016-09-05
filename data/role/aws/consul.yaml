@@ -1,0 +1,88 @@
+ca_url: "https://ca.us-east-1a.i.secure.cd:8888"
+cert_base_url: "http://ca.us-east-1a.i.secure.cd"
+
+config::consul::server::advertise_addr: "%{::ipaddress_eth0}"
+config::consul::server::listen_addr: "%{::ipaddress_eth0}"
+config::consul::server::https_addr: "127.0.1.1"
+config::consul::server::http_port: -1
+
+config::consul::server::start_join:
+  - consul00.us-east-1a.i.secure.cd
+
+# generic
+cfssl::remote::configs:
+  consulca:
+    owner: consul
+    config:
+      auth_keys:
+        consulca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "%{hiera('ca_url')}"
+      signing:
+        default:
+          auth_remote:
+            auth_key: consulca
+            remote: caserver
+
+cfssl::remote::gencerts:
+  consul:
+    owner: consul
+    config: consulca
+    label: consulca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::fqdn}"
+      hosts:
+        - "%{::fqdn}"
+        - "%{::hostname}"
+        - "127.0.0.1"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Consul Server
+          ST: London
+
+ca_cert::ca_certs:
+  'catlsca-bundle':
+    source: "%{hiera('cert_base_url')}/catlsca-bundle.crt"
+  'consulca-bundle':
+    source: "%{hiera('cert_base_url')}/consulca-bundle.crt"
+  'vaultca-bundle':
+    source: "%{hiera('cert_base_url')}/vaultca-bundle.crt"
+
+config::consul::server::datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::server::acl_datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::server::acl_default_policy: deny
+config::consul::server::acl_master_token: "%{::consul_acl_master_token}"
+config::consul::server::bootstrap_expect: 3
+config::consul::server::encrypt_key: "%{::consul_encrypt_key}"
+config::consul::server::cert_file: /etc/cfssl/consul/consul.pem
+config::consul::server::key_file: /etc/cfssl/consul/consul-key.pem
+config::consul::server::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::server::https_port: 8501
+config::consul::server::http_port: 8500
+config::consul::server::verify_incoming: true
+config::consul::server::verify_outgoing: true
+
+config::consul::server::acls:
+  'vault':
+    ensure: present
+    rules: |
+      key "vault/" {policy = "write"}
+      service "vault" { policy = "write" }
+    id: "%{::consul_acl_token_vault}"
+    type: client
+  'consului':
+    ensure: present
+    rules: |
+       key "" {policy = "read"}
+       key "vault/" {policy = "deny"}
+       service "" { policy = "read" }
+    id: "%{::consul_acl_token_consul_ui}"
+    type: client
