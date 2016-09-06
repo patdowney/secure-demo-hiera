@@ -1,5 +1,5 @@
-ca_url: "https://ca.us-east-1a.i.secure.cd:8888"
-cert_base_url: "http://ca.us-east-1a.i.secure.cd"
+ca_url: "https://ca00.us-east-1a.i.secure.cd:8888"
+cert_base_url: "http://ca00.us-east-1a.i.secure.cd"
 
 config::consul::server::advertise_addr: "%{::ipaddress_eth0}"
 config::consul::server::listen_addr: "%{::ipaddress_eth0}"
