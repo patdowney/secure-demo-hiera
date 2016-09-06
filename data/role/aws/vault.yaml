@@ -1,0 +1,169 @@
+ca_url: "https://ca00.us-east-1a.i.secure.cd:8888"
+cert_base_url: "http://ca00.us-east-1a.i.secure.cd"
+
+cfssl::remote::configs:
+  consulca:
+    owner: consul
+    config:
+      auth_keys:
+        consulca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "%{hiera('ca_url')}"
+      signing:
+        default:
+          auth_remote:
+            auth_key: consulca
+            remote: caserver
+  vaultconsulca:
+    owner: vault
+    config:
+      auth_keys:
+        consulca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "%{hiera('ca_url')}"
+      signing:
+        default:
+          auth_remote:
+            auth_key: consulca
+            remote: caserver
+  vaultca:
+    owner: vault
+    config:
+      auth_keys:
+        vaultca:
+          type: standard
+          key: "%{::cfssl_auth_key_primary}"
+      remotes:
+        caserver: "%{hiera('ca_url')}"
+      signing:
+        default:
+          auth_remote:
+            auth_key: vaultca
+            remote: caserver
+
+cfssl::remote::gencerts:
+  consul:
+    owner: consul
+    config: consulca
+    label: consulca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "%{::hostname}"
+        - "127.0.0.1"
+        - "%{::ipaddress_eth0}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Consul Agent
+          ST: London
+  vaultconsul:
+    owner: vault
+    config: vaultconsulca
+    label: consulca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "%{::hostname}"
+        - "127.0.0.1"
+        - "%{::ipaddress_enth0}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Vault Consul Certificate
+          ST: London
+  vault:
+    owner: vault
+    config: vaultca
+    label: vaultca
+    profile: tls-client-and-server
+    csr:
+      cn: "%{::hostname}"
+      hosts:
+        - "%{::hostname}"
+        - "127.0.0.1"
+        - "%{::ipaddress_eth0}"
+      key:
+        algo: rsa
+        size: 4096
+      names:
+        - C: GB
+          L: London
+          O: Acme Secure Delivery Company
+          OU: Vault Server
+          ST: London
+
+ca_cert::ca_certs:
+  'catlsca-bundle':
+    source: "%{hiera('cert_base_url')}/catlsca-bundle.crt"
+  'consulca-bundle':
+    source: "%{hiera('cert_base_url')}/consulca-bundle.crt"
+  'vaultca-bundle':
+    source: "%{hiera('cert_base_url')}/vaultca-bundle.crt"
+
+
+
+config::consul::agent::datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::agent::retry_join:
+  - consul00.us-east-1a.i.secure.cd
+  - consul01.us-east-1a.i.secure.cd
+  - consul02.us-east-1a.i.secure.cd
+config::consul::agent::encrypt_key: "%{::consul_encrypt_key}"
+config::consul::agent::cert_file: /etc/cfssl/consul/consul.pem
+config::consul::agent::key_file: /etc/cfssl/consul/consul-key.pem
+config::consul::agent::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::agent::https_port: 8501
+config::consul::agent::http_port: -1
+config::consul::agent::verify_outgoing: true
+config::consul::agent::enable_ui: true
+config::consul::agent::client_addr: 127.0.0.1
+config::consul::agent::advertise_addr: "%{::ipaddress_eth0}"
+config::consul::agent::acl_token: "%{::consul_acl_token_vault}"
+config::consul::agent::acl_datacenter: "%{::ec2_placement_availability_zone}"
+
+
+config::vault::server::listener_addr: "%{::ipaddress_eth0}:8200"
+config::vault::server::tls_cert_file: /etc/cfssl/vault/vault.pem
+config::vault::server::tls_key_file: /etc/cfssl/vault/vault-key.pem
+config::vault::server::consul_ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::vault::server::consul_cert_file: /etc/cfssl/vaultconsul/vaultconsul.pem
+config::vault::server::consul_key_file: /etc/cfssl/vaultconsul/vaultconsul-key.pem
+config::vault::server::consul_token: "%{::consul_acl_token_vault}"
+
+consul::services:
+  vault:
+    address: "%{::ipaddress_eth0}"
+    port: 8200
+    checks:
+      - script: "curl -sw '%{literal('%')}{http_code}' --user-agent consul/healthcheck --insecure https://%{::ipaddress_eth0}:8200/v1/sys/health | egrep -q '200|429'"
+        interval: 10s
+
+config::vault::mounts:
+  "postgresql":
+    type: postgresql
+    path: postgresql
+    defaultLeaseTTL: 0
+    maxLeaseTTL: 0
+  "pki":
+    type: pki
+    path: pki
+  "generic":
+    type: generic
+    path: generic
+  "transit":
+    type: transit
+    path: transit
