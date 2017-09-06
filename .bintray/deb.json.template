@@ -1,0 +1,28 @@
+{
+  "package": {
+    "name": "%%PACKAGE_NAME%%",
+    "repo": "secure-demo-deb",
+    "subject": "patdowney",
+    "desc": "%%PACKAGE_NAME%%",
+    "vcs_url": "https://github.com/patdowney/%%PACKAGE_NAME%%.git",
+    "licenses": ["MPL-2.0"],
+    "github_repo": "patdowney/%%PACKAGE_NAME%%",
+    "public_download_numbers": false,
+    "public_stats": false
+  },
+  "version": {
+    "name": "%%PACKAGE_VERSION%%"
+  },
+  "files":
+  [
+    {
+      "includePattern": "./.output/(%%PACKAGE_NAME%%_%%PACKAGE_VERSION%%.*_all.deb)",
+      "uploadPattern": "$1",
+      "matrixParams": {
+        "deb_distribution": "precise,trusty,vivid,xenial,jessie",
+        "deb_component": "main",
+        "deb_architecture": "amd64"}
+    }
+  ],
+  "publish": true
+}
