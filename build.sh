@@ -27,10 +27,8 @@ bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
   --deb-user root \
   --deb-group root \
   --verbose \
-  bin/ \
-  manifests/ \
-  $(find modules/ -name files -or -name lib -or -name manifests -or -name templates) \
-  $(find vendor/modules/ -name files -or -name lib -or -name manifests -or -name templates)
+  hiera.yaml=/etc/hiera/hiera.yaml \
+  data=/etc/hiera/
 
 PACKAGE_TYPE="rpm"
 bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
@@ -44,7 +42,5 @@ bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
   --rpm-user root \
   --rpm-group root \
   --verbose \
-  bin/ \
-  manifests/ \
-  $(find modules/ -name files -or -name lib -or -name manifests -or -name templates) \
-  $(find vendor/modules/ -name files -or -name lib -or -name manifests -or -name templates)
+  hiera.yaml=/etc/hiera/hiera.yaml \
+  data=/etc/hiera/
