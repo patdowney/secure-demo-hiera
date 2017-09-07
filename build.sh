@@ -6,11 +6,7 @@ PACKAGE_URL="https://github.com/patdowney/secure-demo-hiera"
 
 bundle install --path vendor/bundle --binstubs .bundle/bin
 
-bundle exec librarian-puppet package --strip-dot-git --path=vendor/modules --verbose
-bundle exec librarian-puppet install --local --strip-dot-git --path=vendor/modules --verbose
-
-bundle exec puppet-lint --no-80chars-check --no-140chars-check --fail-on-warnings --with-context --with-filename modules
-bundle exec puppet-lint --no-80chars-check --no-140chars-check --fail-on-warnings --with-context --with-filename manifests
+find ./data -name '*.yaml' -exec ruby -e  "require 'yaml'; YAML.parse_file(\"{}\");" \;
 
 VERSION=${TRAVIS_BUILD_NUMBER:-0}
 
