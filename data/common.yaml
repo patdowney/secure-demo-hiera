@@ -9,3 +9,5 @@ base::repos::repos:
     gpgcheck: false
     repo_gpgcheck: false
     enabled: true
+
+cfssl::install::release: 1.2_51-1
