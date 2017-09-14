@@ -1,10 +1,12 @@
 base::repos::repos:
   patdowney-secure-puppet-demo:
+    name: patdowney-secure-puppet-demo
     baseurl: https://dl.bintray.com/patdowney/secure-demo-yum
     gpgcheck: false
     repo_gpgcheck: false
     enabled: true
   patdowney-rpm:
+    name: patdowney-rpm
     baseurl: https://dl.bintray.com/patdowney/rpm
     gpgcheck: false
     repo_gpgcheck: false
