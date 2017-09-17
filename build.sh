@@ -17,7 +17,7 @@ rm -rf .output/*
 
 PACKAGE_TYPE="deb"
 bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
-  --prefix /usr/share/${PACKAGE_NAME} \
+  --prefix / \
   --package ".output/${PACKAGE_NAME}_${PACKAGE_VERSION}-${VERSION}_all.${PACKAGE_TYPE}" \
   --name "${PACKAGE_NAME}" \
   --version "${PACKAGE_VERSION}-${VERSION}" \
@@ -32,7 +32,7 @@ bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
 
 PACKAGE_TYPE="rpm"
 bundle exec  fpm -t ${PACKAGE_TYPE} -s dir \
-  --prefix /usr/share/${PACKAGE_NAME} \
+  --prefix / \
   --package ".output/${PACKAGE_NAME}_${PACKAGE_VERSION}-${VERSION}_all.${PACKAGE_TYPE}" \
   --name "${PACKAGE_NAME}" \
   --version "${PACKAGE_VERSION}-${VERSION}" \
