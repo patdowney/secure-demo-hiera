@@ -13,3 +13,8 @@ base::repos::repos:
     enabled: true
 
 cfssl::install::release: latest
+
+consul::data_dir: /etc/consul.d
+consul::install_method: package
+consul::init_style: unmanaged
+consul::manage_service: true
