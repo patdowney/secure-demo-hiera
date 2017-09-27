@@ -117,7 +117,7 @@ ca_cert::ca_certs:
 
 
 
-config::consul::agent::datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::agent::datacenter: "%{ec2_metadata.placement.availability-zone}"
 config::consul::agent::retry_join:
   - consul00.us-east-1a.i.secure.cd
   - consul01.us-east-1a.i.secure.cd
@@ -133,7 +133,7 @@ config::consul::agent::enable_ui: true
 config::consul::agent::client_addr: 127.0.0.1
 config::consul::agent::advertise_addr: "%{::ipaddress_eth0}"
 config::consul::agent::acl_token: "%{::consul_acl_token_vault}"
-config::consul::agent::acl_datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::agent::acl_datacenter: "%{ec2_metadata._placement.availability-zone}"
 
 
 config::vault::server::listener_addr: "%{::ipaddress_eth0}:8200"

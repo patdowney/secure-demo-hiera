@@ -56,8 +56,8 @@ ca_cert::ca_certs:
   'vaultca-bundle':
     source: "%{hiera('cert_base_url')}/vaultca-bundle.crt"
 
-config::consul::server::datacenter: "%{::ec2_placement_availability_zone}"
-config::consul::server::acl_datacenter: "%{::ec2_placement_availability_zone}"
+config::consul::server::datacenter: "%{ec2_metadata.placement.availability-zone}"
+config::consul::server::acl_datacenter: "%{ec2_metadata.placement.availability-zone}"
 config::consul::server::acl_default_policy: deny
 config::consul::server::acl_master_token: "%{::consul_acl_master_token}"
 config::consul::server::bootstrap_expect: 3
