@@ -133,7 +133,7 @@ config::consul::agent::enable_ui: true
 config::consul::agent::client_addr: 127.0.0.1
 config::consul::agent::advertise_addr: "%{::ipaddress_eth0}"
 config::consul::agent::acl_token: "%{::consul_acl_token_vault}"
-config::consul::agent::acl_datacenter: "%{ec2_metadata._placement.availability-zone}"
+config::consul::agent::acl_datacenter: "%{ec2_metadata.placement.availability-zone}"
 
 
 config::vault::server::listener_addr: "%{::ipaddress_eth0}:8200"
