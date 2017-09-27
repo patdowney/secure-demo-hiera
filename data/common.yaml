@@ -14,7 +14,8 @@ base::repos::repos:
 
 cfssl::install::release: latest
 
-consul::data_dir: /etc/consul.d
+consul::data_dir: /var/lib/consul
+consul::config_dir: /etc/consul.d
 consul::install_method: package
 consul::init_style: unmanaged
 consul::manage_service: true
