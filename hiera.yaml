@@ -4,13 +4,13 @@
 version: 5
 hierarchy:
   - name: Provider Specific Role Values
-    path: "role/%{::provider}/%{::role}.yaml"
+    path: "role/%{provider}/%{role}.yaml"
   - name: Role Specific Values
-    path: "role/%{::role}.yaml"
+    path: "role/%{role}.yaml"
   - name: Environment Specific Values
-    path: "env/%{::env}.yaml"
+    path: "env/%{env}.yaml"
   - name: Provider Specific Values
-    path: "provider/%{::provider}.yaml"
+    path: "provider/%{provider}.yaml"
   - name: Common values
     path: common.yaml
 

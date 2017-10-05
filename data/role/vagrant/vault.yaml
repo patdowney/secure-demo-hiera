@@ -120,7 +120,7 @@ config::consul::agent::retry_join:
 config::consul::agent::encrypt_key: "%{::consul_encrypt_key}"
 config::consul::agent::cert_file: /etc/cfssl/consul/consul.pem
 config::consul::agent::key_file: /etc/cfssl/consul/consul-key.pem
-config::consul::agent::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::agent::ca_file: /etc/pki/ca-trust/source/anchors/consulca-bundle.crt
 config::consul::agent::https_port: 8501
 config::consul::agent::http_port: -1
 config::consul::agent::verify_outgoing: true
@@ -133,7 +133,7 @@ config::consul::agent::acl_datacenter: vagrant
 config::vault::server::listener_addr: "%{::ipaddress_eth1}:8200"
 config::vault::server::tls_cert_file: /etc/cfssl/vault/vault.pem
 config::vault::server::tls_key_file: /etc/cfssl/vault/vault-key.pem
-config::vault::server::consul_ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::vault::server::consul_ca_file: /etc/pki/ca-trust/source/anchors/consulca-bundle.crt
 config::vault::server::consul_cert_file: /etc/cfssl/vaultconsul/vaultconsul.pem
 config::vault::server::consul_key_file: /etc/cfssl/vaultconsul/vaultconsul-key.pem
 config::vault::server::consul_token: "%{::consul_acl_token_vault}"

@@ -2,8 +2,8 @@ ca_url: "https://172.10.10.10:8888"
 cert_base_url: "http://172.10.10.10"
 
  
-config::consul::server::advertise_addr: "%{::ipaddress_enp0s8}"
-config::consul::server::listen_addr: "%{::ipaddress_eth1}"
+config::consul::server::advertise_addr: "%{networking.interfaces.eth1.ip}"
+config::consul::server::listen_addr: "%{networking.interfaces.eth0.ip}"
 
 config::consul::server::start_join:
   - 172.10.10.16
@@ -16,7 +16,7 @@ cfssl::remote::configs:
       auth_keys:
         consulca:
           type: standard
-          key: "%{::cfssl_auth_key_primary}"
+          key: "%{cfssl_auth_key_primary}"
       remotes:
         caserver: "%{hiera('ca_url')}"
       signing:
@@ -32,12 +32,12 @@ cfssl::remote::gencerts:
     label: consulca
     profile: tls-client-and-server
     csr:
-      cn: "%{::hostname}"
+      cn: "%{hostname}"
       hosts:
-        - "%{::hostname}"
+        - "%{hostname}"
         - "127.0.0.1"
-        - "%{::ipaddress_enp0s3}"
-        - "%{::ipaddress_enp0s8}"
+        - "%{networking.interfaces.eth1.ip}"
+        - "%{networking.interfaces.eth0.ip}"
       key:
         algo: rsa
         size: 4096
@@ -56,15 +56,15 @@ ca_cert::ca_certs:
   'vaultca-bundle':
     source: "%{hiera('cert_base_url')}/vaultca-bundle.crt"
 
-config::consul::server::datacenter: "%{::env}"
-config::consul::server::acl_datacenter: "%{::env}"
+config::consul::server::datacenter: "%{env}"
+config::consul::server::acl_datacenter: "%{env}"
 config::consul::server::acl_default_policy: deny
-config::consul::server::acl_master_token: "%{::consul_acl_master_token}"
+config::consul::server::acl_master_token: "%{consul_acl_master_token}"
 config::consul::server::bootstrap_expect: 3
-config::consul::server::encrypt_key: "%{::consul_encrypt_key}"
+config::consul::server::encrypt_key: "%{consul_encrypt_key}"
 config::consul::server::cert_file: /etc/cfssl/consul/consul.pem
 config::consul::server::key_file: /etc/cfssl/consul/consul-key.pem
-config::consul::server::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::server::ca_file: /etc/pki/ca-trust/source/anchors/consulca-bundle.crt
 config::consul::server::https_port: 8501
 config::consul::server::http_port: 8500
 config::consul::server::verify_incoming: true
@@ -76,7 +76,7 @@ config::consul::server::acls:
     rules: |
       key "vault/" {policy = "write"}
       service "vault" { policy = "write" }
-    id: "%{::consul_acl_token_vault}"
+    id: "%{consul_acl_token_vault}"
     type: client
   'consului':
     ensure: present
@@ -84,5 +84,5 @@ config::consul::server::acls:
        key "" {policy = "read"}
        key "vault/" {policy = "deny"}
        service "" { policy = "read" }
-    id: "%{::consul_acl_token_consul_ui}"
+    id: "%{consul_acl_token_consul_ui}"
     type: client

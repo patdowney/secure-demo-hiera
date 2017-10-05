@@ -50,7 +50,7 @@ config::consul::agent::retry_join:
 config::consul::agent::encrypt_key: "%{::consul_encrypt_key}"
 config::consul::agent::cert_file: /etc/cfssl/consul/consul.pem
 config::consul::agent::key_file: /etc/cfssl/consul/consul-key.pem
-config::consul::agent::ca_file: /etc/ssl/certs/consulca-bundle.pem
+config::consul::agent::ca_file: /etc/pki/ca-trust/source/anchors/consulca-bundle.crt
 config::consul::agent::https_port: 8501
 config::consul::agent::http_port: -1
 config::consul::agent::verify_outgoing: true
