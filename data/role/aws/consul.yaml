@@ -69,6 +69,7 @@ config::consul::server::https_port: 8501
 config::consul::server::http_port: 8500
 config::consul::server::verify_incoming: true
 config::consul::server::verify_outgoing: true
+config::consul::server::verify_server_hostname: true
 
 config::consul::server::acls:
   'vault':
