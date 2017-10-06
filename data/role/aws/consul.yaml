@@ -59,6 +59,7 @@ config::consul::server::datacenter: "%{ec2_metadata.placement.availability-zone}
 config::consul::server::acl_datacenter: "%{ec2_metadata.placement.availability-zone}"
 config::consul::server::acl_default_policy: deny
 config::consul::server::acl_master_token: "%{::consul_acl_master_token}"
+config::consul::server::acl_token: "%{::consul_acl_master_token}"
 config::consul::server::bootstrap_expect: 3
 config::consul::server::encrypt_key: "%{::consul_encrypt_key}"
 config::consul::server::cert_file: /etc/cfssl/consul/consul.pem
