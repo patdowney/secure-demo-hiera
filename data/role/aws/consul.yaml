@@ -37,6 +37,7 @@ cfssl::remote::gencerts:
         - "%{::fqdn}"
         - "%{::hostname}"
         - "127.0.0.1"
+        - "server.%{ec2_metadata.placement.availability-zone}.consul"
       key:
         algo: rsa
         size: 4096
