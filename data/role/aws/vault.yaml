@@ -52,9 +52,10 @@ cfssl::remote::gencerts:
     label: consulca
     profile: tls-client-and-server
     csr:
-      cn: "%{::hostname}"
+      cn: "%{::fqdn}"
       hosts:
         - "%{::hostname}"
+        - "%{::fqdn}"
         - "127.0.0.1"
         - "%{::ipaddress_eth0}"
       key:
@@ -72,9 +73,10 @@ cfssl::remote::gencerts:
     label: consulca
     profile: tls-client-and-server
     csr:
-      cn: "%{::hostname}"
+      cn: "%{::fqdn}"
       hosts:
         - "%{::hostname}"
+        - "%{::fqdn}"
         - "127.0.0.1"
         - "%{::ipaddress_enth0}"
       key:
@@ -92,9 +94,10 @@ cfssl::remote::gencerts:
     label: vaultca
     profile: tls-client-and-server
     csr:
-      cn: "%{::hostname}"
+      cn: "%{::fqdn}"
       hosts:
         - "%{::hostname}"
+        - "%{::fqdn}"
         - "127.0.0.1"
         - "%{::ipaddress_eth0}"
       key:
