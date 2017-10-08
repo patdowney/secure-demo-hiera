@@ -133,6 +133,7 @@ config::consul::agent::https_port: 8501
 config::consul::agent::http_port: -1
 config::consul::agent::verify_outgoing: true
 config::consul::agent::enable_ui: false
+config::consul::agent::enable_enable_script_check: true
 config::consul::agent::client_addr: 127.0.0.1
 config::consul::agent::advertise_addr: "%{::ipaddress_eth0}"
 config::consul::agent::acl_token: "%{consul_acl_token_vault}"
