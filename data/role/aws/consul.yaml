@@ -78,7 +78,7 @@ config::consul::server::acls:
     rules: |
       key "vault/" {policy = "write"}
       service "vault" { policy = "write" }
-    id: "%{::consul_acl_token_vault}"
+    id: "%{consul_acl_token_vault}"
     type: client
   'consului':
     ensure: present
@@ -86,5 +86,5 @@ config::consul::server::acls:
        key "" {policy = "read"}
        key "vault/" {policy = "deny"}
        service "" { policy = "read" }
-    id: "%{::consul_acl_token_consul_ui}"
+    id: "%{consul_acl_token_consul_ui}"
     type: client

@@ -8,7 +8,7 @@ cfssl::remote::configs:
       auth_keys:
         consulca:
           type: standard
-          key: "%{::cfssl_auth_key_primary}"
+          key: "%{cfssl_auth_key_primary}"
       remotes:
         caserver: "%{hiera('ca_url')}"
       signing:
@@ -22,7 +22,7 @@ cfssl::remote::configs:
       auth_keys:
         consulca:
           type: standard
-          key: "%{::cfssl_auth_key_primary}"
+          key: "%{cfssl_auth_key_primary}"
       remotes:
         caserver: "%{hiera('ca_url')}"
       signing:
@@ -36,7 +36,7 @@ cfssl::remote::configs:
       auth_keys:
         vaultca:
           type: standard
-          key: "%{::cfssl_auth_key_primary}"
+          key: "%{cfssl_auth_key_primary}"
       remotes:
         caserver: "%{hiera('ca_url')}"
       signing:
@@ -135,7 +135,7 @@ config::consul::agent::verify_outgoing: true
 config::consul::agent::enable_ui: false
 config::consul::agent::client_addr: 127.0.0.1
 config::consul::agent::advertise_addr: "%{::ipaddress_eth0}"
-config::consul::agent::acl_token: "%{::consul_acl_token_vault}"
+config::consul::agent::acl_token: "%{consul_acl_token_vault}"
 config::consul::agent::acl_datacenter: "%{ec2_metadata.placement.availability-zone}"
 
 
@@ -145,7 +145,7 @@ config::vault::server::tls_key_file: /etc/cfssl/vault/vault-key.pem
 config::vault::server::consul_ca_file: /etc/pki/ca-trust/source/anchors/consulca-bundle.crt
 config::vault::server::consul_cert_file: /etc/cfssl/vaultconsul/vaultconsul.pem
 config::vault::server::consul_key_file: /etc/cfssl/vaultconsul/vaultconsul-key.pem
-config::vault::server::consul_token: "%{::consul_acl_token_vault}"
+config::vault::server::consul_token: "%{consul_acl_token_vault}"
 
 consul::services:
   vault:
